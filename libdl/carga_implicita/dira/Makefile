@@ -19,23 +19,7 @@ all: liba.a
 liba.a: a.o a2.o
 	ar rcs $@ $^
 
-#
-# LIBRERIA DINAMICA
-#
-# Para dar opciones al montador se utiliza -Wl
-# Los flags para el montador se indican separados por comas para que el compilador
-# pueda distinguirlos de los que se refieren a él mismo.
-#
-# -soname es un modificador para el montador y le indica el nombre simbólico
-# de la libreria que ha de generar. Este nombre se utiliza para el control de versiones
-#
-# El compilador necesita un enlace a la libreia cuyo nombre debe ser liba.so. Una vez
-# compilado se puede eliminar el enlace.
-#
-#liba.so: a.o a2.o
-#	$(CC) -shared $(LDFLAGS) -o $@ $(filter %.o,$^) $(LDLIBS)
-
 clean:
-	$(RM) *.o *~ *.a liba.so
+	$(RM) *.o *~ *.a
 
 
