@@ -8,7 +8,7 @@
 CC=gcc
 CFLAGS=-Wall -ggdb -Idira -fPIC
 LDFLAGS=-Ldira -L. --export-dynamic
-LDLIBS=-la -ldl 
+LDLIBS=-la -ldl ./dirb/libb.so 
 
 all: libs main
 
