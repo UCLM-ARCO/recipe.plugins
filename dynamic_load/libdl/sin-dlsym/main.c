@@ -71,8 +71,9 @@ main()
   
   printf("Provemos con %d\n",i);
 
-  a(i);
-  f("b",i);
+  a(i);      // Llamada estática.
+  f("a",i);  // Llamada plugin.
+  f("b",i);  // Llamada plugin.
   return 0;
 }
 
