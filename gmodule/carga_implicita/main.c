@@ -42,9 +42,8 @@ f (char* key, int i)
 
   if (!p) {
     char libname[PATH_MAX];
-    char path[PATH_MAX];
-   
-    sprintf(libname, "%s/dir%s/lib%s.so", getcwd(path, PATH_MAX), key, key);
+
+    sprintf(libname, "./dir%s/lib%s.so", key, key);
     printf("Intentando cargar '%s'.\n", libname);
     if((pmodule = g_module_open(libname,G_MODULE_BIND_LAZY))==NULL){
       g_warning("No se pudo cargar la librería %s", libname);

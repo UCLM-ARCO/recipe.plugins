@@ -15,23 +15,23 @@ struct plugin {
   struct plugin* next;
 };
 
-static struct plugin* protos;
+static struct plugin* plugins;
 
 void
 register_plugin (char* key, void (*f)(int))
 {
   struct plugin* p = (struct plugin*) malloc(sizeof(struct plugin));
-  p->next = protos;
+  p->next = plugins;
   p->f = f;
   p->key = key;
-  protos = p;
+  plugins = p;
   printf("** Plugin '%s' registrado con éxito.\n", key);
 }
 
 void
 unregister_plugin (char* key)
 {
-  struct plugin *prev = NULL, *p = protos;
+  struct plugin *prev = NULL, *p = plugins;
   while (p) {
     if (0==strcmp(p->key, key)) break;
     prev = p;
@@ -39,7 +39,7 @@ unregister_plugin (char* key)
   }
   if (p) {
     if (prev) prev->next = p->next;
-    else protos = p->next;
+    else plugins = p->next;
     free(p);
   }
 }
@@ -47,7 +47,7 @@ unregister_plugin (char* key)
 static struct plugin*
 busca(char* key)
 {
-  struct plugin *p = protos;
+  struct plugin *p = plugins;
   while (p) {
     if (0==strcmp(p->key, key)) break;
     p = p->next;
@@ -62,9 +62,8 @@ f (char* key, int i)
   p = busca(key);
   if (!p) {
     char libname[PATH_MAX];
-    char path[PATH_MAX];
 
-    sprintf(libname, "%s/dir%s/lib%s.so", getcwd(path, PATH_MAX), key, key);
+    sprintf(libname, "./dir%s/lib%s.so", key, key);
     printf("Intentando cargar '%s'.\n", libname);
     dlopen(libname, RTLD_LAZY);
 
