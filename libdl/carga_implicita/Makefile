@@ -1,9 +1,10 @@
-#
-# Este fichero genera un programa main que hace uso de una libreria dinamica (liba.so)
-# y de un plugin, es decir, una libreria enlazada en tiempo de ejecución (libb.so).
+# Este fichero genera un programa main que hace uso de una libreria
+# dinamica (liba.so) y de un plugin, es decir, una libreria enlazada en
+# tiempo de ejecución (libb.so).
 #
 # Observando los flags al compilador vemos que no hay referencias a libb
-# El flag -ldl se refiere a la libreria libdl.so que permite hacer enlaces dinamicos
+# El flag -ldl se refiere a la libreria libdl.so que permite hacer
+# enlaces dinamicos
 # 
 CC=gcc
 CFLAGS=-Wall -ggdb -Idira -fPIC

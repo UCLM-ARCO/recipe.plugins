@@ -25,7 +25,7 @@ int main(){
     return 1;
   }
  
-  printf("Probemos con %d\n",i);
+  printf("Resultados para '%d'.\n",i);
 
   a(i);
   pFuncion(i);
