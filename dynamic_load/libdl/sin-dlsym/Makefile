@@ -12,16 +12,7 @@ LDLIBS=-la -ldl
 
 all: libs main
 
-main: main.o libd.so
-
-libd.so: LDFLAGS=-L.
-libd.so: LDLIBS=
-libd.so: CFLAGS=-ggdb -Wall -fPIC
-libd.so: c.o
-
-%.so:
-	$(CC) -shared $(LDFLAGS) -o $@ $(filter %.o,$^) $(LDLIBS)
-
+main: main.o 
 #
 # Estas reglas ejecutan los makefiles que hay en los subdirectorios
 #
