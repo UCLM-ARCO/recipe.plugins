@@ -7,7 +7,7 @@ CC=gcc
 CFLAGS=-Wall -ggdb -fPIC 
 LDFLAGS=-fPIC -shared
 
-all: libb.a libb.so.1.0.0
+all:  libb.so.1.0.0 #libb.a
 
 #
 # LIBRERIA ESTATICA
@@ -16,8 +16,8 @@ all: libb.a libb.so.1.0.0
 # por medio de la utilidad 'ar'Las opciones dadas son reemplazar(r), crear(c) y crear
 # un indice del contenido en el propio archivo (s).
 #
-libb.a: b.o b2.o
-	ar rcs $@ $^
+#libb.a: b.o b2.o
+#	ar rcs $@ $^
 
 #
 # LIBRERIA DINAMICA

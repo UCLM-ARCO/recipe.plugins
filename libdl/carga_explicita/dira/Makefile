@@ -7,7 +7,7 @@ CC=gcc
 CFLAGS=-Wall -ggdb -fPIC 
 LDFLAGS=-fPIC -shared
 
-all: liba.a liba.so.1.0.0
+all: liba.a #liba.so.1.0.0
 
 #
 # LIBRERIA ESTATICA
@@ -32,10 +32,10 @@ liba.a: a.o a2.o
 # El compilador necesita un enlace a la libreia cuyo nombre debe ser liba.so. Una vez
 # compilado se puede eliminar el enlace.
 #
-liba.so.1.0.0: a.o a2.o
-	$(CC) -Wl,-soname,liba.so.1.0.0 $(LDFLAGS) -o $@ $^
+#liba.so.1.0.0: a.o a2.o
+#	$(CC) -Wl,-soname,liba.so.1.0.0 $(LDFLAGS) -o $@ $^
 
 clean:
-	$(RM) *.o *~ *.a liba.so.1.0.0
+	$(RM) *.o *~ *.a #liba.so.1.0.0
 
 
