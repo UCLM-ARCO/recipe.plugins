@@ -14,9 +14,13 @@ int main(){
   GModule* pmodule;
   //void *pLibb;
   //void (*pFuncion)(int);
-  gpointer (*pFuncion)(int);
+  void (*pFuncion)(int);
 
-  if((pmodule = g_module_open(RUTA_LIBB,G_MODULE_BIND_LAZY))==NULL){
+  /*  Se comprueba que el sistema soporta los plugins */
+  if (!g_module_supported ())
+    return 0;
+
+  if(!(pmodule = g_module_open(RUTA_LIBB,G_MODULE_BIND_LAZY))){
     g_warning("No se pudo cargar la librería %s", RUTA_LIBB);
     return 1;
   }
@@ -25,9 +29,8 @@ int main(){
     fprintf(stderr, dlerror());
     return 1;
     }*/
-  g_print("hola");
 
-  if(!(g_module_symbol(pmodule,"b", (gpointer*)pFuncion))){
+  if(!(g_module_symbol(pmodule,"b", (gpointer*) &pFuncion))){
     g_warning("No se pudo cargar el simbolo: b");
     return 1;
   }
