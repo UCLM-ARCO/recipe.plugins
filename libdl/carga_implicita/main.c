@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include "a.h"
 
-#define PLUGIN_PATH "/home/dvilla/repos/public/misc/plugins/libdl/carga_implicita"
 #define PATH_MAX 1024
 
 struct plugin {
