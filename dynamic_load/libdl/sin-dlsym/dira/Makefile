@@ -33,7 +33,6 @@ liba.a: a.o a2.o
 # compilado se puede eliminar el enlace.
 #
 liba.so: a.o a2.o
-#	$(CC) -Wl,-soname,liba.so $(LDFLAGS) -o $@ $^
 	$(CC) -shared $(LDFLAGS) -o $@ $(filter %.o,$^) $(LDLIBS)
 
 clean:

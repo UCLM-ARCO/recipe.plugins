@@ -2,6 +2,7 @@
 #include <dlfcn.h>
 #include <string.h>
 #include <stdio.h>
+#include "a.h"
 
 struct plugin {
   char* key;
@@ -19,7 +20,7 @@ register_plugin (char* key, void (*f)(int))
   p->f = f;
   p->key = key;
   protos = p;
-  printf("Registrado %s\n", key);
+  printf("** Registrado %s\n", key);
 }
 
 void
@@ -70,8 +71,8 @@ main()
   
   printf("Provemos con %d\n",i);
 
-  f("a",3);
-  f("b",3);
+  a(i);
+  f("b",i);
   return 0;
 }
 
