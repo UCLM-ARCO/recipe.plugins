@@ -3,5 +3,5 @@
 
 void b(int i)
 {
-  printf("Numerito es: %d\n", b2(i));
+   printf("a(%d) devuelve '%d'\n", i, b2(i));
 }
