@@ -7,7 +7,7 @@
 # 
 CC=gcc
 CFLAGS=-Wall -ggdb -Idira -fPIC `pkg-config --cflags glib-2.0` `pkg-config --cflags gmodule-2.0`
-LDFLAGS=-Ldira -L. --export-dynamic -rdynamic
+LDFLAGS=-Ldira -L. -rdynamic
 LDLIBS=-la -ldl `pkg-config --libs gmodule-2.0` `pkg-config --libs glib-2.0` 
 
 all: libs main
