@@ -1,6 +1,6 @@
 NOTA
 ----
    El programa deberá ser ejecutado en este mismo directorio, ya
-que sino el programa no podrá encontrar la ruta exacta del plugin,
-y cuando se habla de plugins, estos deben estar localizados en una
-ruta bien conocida.
+que si no, el programa no podrá encontrar la ruta exacta del plugin.
+La carga del plugin requiere de la ruta absoluta que se forma a partir del
+directorio en el que se ejecuta el programa.
