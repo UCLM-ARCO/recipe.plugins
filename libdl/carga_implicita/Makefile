@@ -7,7 +7,7 @@
 # 
 CC=gcc
 CFLAGS=-Wall -ggdb -Idira -fPIC
-LDFLAGS=-Ldira --export-dynamic -rdynamic
+LDFLAGS=-Ldira  -rdynamic
 LDLIBS=-la -ldl
 
 all: libs main
