@@ -12,8 +12,6 @@ int main(){
 
   /* manejador de la libreria libb */
   GModule* pmodule;
-  //void *pLibb;
-  //void (*pFuncion)(int);
   gpointer (*pFuncion)(int);
 
   if((pmodule = g_module_open(RUTA_LIBB,G_MODULE_BIND_LAZY))==NULL){
@@ -21,28 +19,19 @@ int main(){
     return 1;
   }
 
-  /*if ((pLibb = dlopen(RUTA_LIBB, RTLD_LAZY)) ==NULL) {
-    fprintf(stderr, dlerror());
-    return 1;
-    }*/
 
   if(!(g_module_symbol(pmodule,"b", (gpointer*)&pFuncion))){
     g_warning("No se pudo cargar el simbolo: b");
     return 1;
   }
-  /*if ((pFuncion = dlsym(pLibb, "b")) == NULL) {
-    fprintf(stderr, dlerror());
-    return 1;
-    }*/
-
-  printf("Provemos con %d\n",i);
+ 
+  printf("**Provemos con %d\n",i);
 
   a(i);
   pFuncion(i);
 
   g_module_close(pmodule);
-  //dlclose(pLibb);
-
+ 
   return(0);
 }
 
