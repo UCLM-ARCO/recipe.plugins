@@ -25,7 +25,7 @@ int main(){
     return 1;
   }
  
-  printf("**Provemos con %d\n",i);
+  printf("Provemos con %d\n",i);
 
   a(i);
   pFuncion(i);
