@@ -7,7 +7,7 @@ CC=gcc
 CFLAGS=-Wall -ggdb -fPIC 
 LDFLAGS=-fPIC -shared
 
-all: liba.a #liba.so
+all: liba.a
 
 #
 # LIBRERIA ESTATICA
