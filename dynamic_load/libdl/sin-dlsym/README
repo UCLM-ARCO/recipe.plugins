@@ -1,4 +1,4 @@
    Hace falta indicarle al sitema donde tiene que buscar
 las librerías, esto se indica mediante la variable de 
 entorno. 
- 	$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.:./dira
+ 	$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./dirb

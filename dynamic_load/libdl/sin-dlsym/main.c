@@ -47,6 +47,9 @@ busca(char* key)
     if (0==strcmp(p->key, key)) break;
     p = p->next;
   }
+  
+  if(p == protos)
+    printf("No se ha encontrado el plugin %s\n",key);
   return p;
 }
 
