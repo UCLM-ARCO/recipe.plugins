@@ -52,7 +52,6 @@ main()
   printf("Provemos con %d\n",i);
 
   a(i);      // llamada estática.
-  f("a",i);  // llamada plugin.
   f("b",i);  // llamada plugin.
   return 0;
 }
