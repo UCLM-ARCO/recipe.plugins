@@ -8,8 +8,7 @@
 int main(){
   int i = 3;
 
-  /* manejador de la libreria libb */
-  void *pLibb;
+  void *pLibb;   /* manejador para la libreria */
   void (*pFuncion)(int);
 
   if ((pLibb = dlopen(RUTA_LIBB, RTLD_LAZY)) ==NULL) {
@@ -22,7 +21,7 @@ int main(){
     return 1;
   }
 
-  printf("Probemos con %d\n",i);
+  printf("Resultados para '%d'\n",i);
 
   a(i);
   pFuncion(i);

@@ -12,22 +12,22 @@
 #endif
 
 
-static GHashTable* plugin = NULL;
+static GHashTable* plugins = NULL;
 
 void
 register_plugin (char* key, void (*f)(int))
 {
- if (plugin == NULL)
-    plugin = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
- g_hash_table_insert(plugin,key,f);
- printf("** Plugin '%s' registrado con éxito.\n", key);
+  if (plugins == NULL)
+    plugins = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+  g_hash_table_insert(plugins, key, f);
+  printf("** Plugin '%s' registrado con éxito.\n", key);
 }
 
 void
 unregister_plugin (char* key)
 {
-  if (plugin != NULL)
-    g_hash_table_remove(plugin,key);
+  if (plugins != NULL)
+    g_hash_table_remove(plugins, key);
   
 }
 
@@ -35,12 +35,11 @@ void
 f (char* key, int i)
 {
   GModule* pmodule;
-  void (*p)(int);
+  void (*p)(int) = NULL;
 
-  if (plugin == NULL)
-    plugin = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+  if (plugins != NULL)
+    p = g_hash_table_lookup(plugins, key);
 
-  p = g_hash_table_lookup(plugin, key);
   if (!p) {
     char libname[PATH_MAX];
     char path[PATH_MAX];
@@ -52,8 +51,10 @@ f (char* key, int i)
       exit(1);
     }
 
-    p = g_hash_table_lookup(plugin, key);
+    if (plugins != NULL)
+      p = g_hash_table_lookup(plugins, key);
   }
+
   if (p) p(i);
   else
      fprintf(stderr, "ERROR: El plugin '%s' no está disponible.\n", key);
@@ -64,10 +65,11 @@ main()
 {
   int i = 3;
   
-  printf("Probemos con %d\n",i);
+  printf("Resultados para '%d'.\n",i);
 
   a(i);      // llamada estática.
-  f("b",i);  // llamada plugin.
+  f("b",i);  // llamada a plugin.
+
   return 0;
 }
 
