@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <gmodule.h>
 #include <glib/ghash.h>
+#include "a.h"
 
 static GHashTable* plugin = NULL;
 
@@ -50,8 +51,8 @@ main()
   
   printf("Provemos con %d\n",i);
 
-  f("a",3);
-  f("b",3);
+  a(i);
+  f("b",i);
   return 0;
 }
 

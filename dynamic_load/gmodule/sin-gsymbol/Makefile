@@ -6,9 +6,9 @@
 # El flag -ldl se refiere a la libreria libdl.so que permite hacer enlaces dinamicos
 # 
 CC=gcc
-CFLAGS=-fPIC -ggdb -Wall `pkg-config --cflags glib-2.0` `pkg-config --cflags gmodule-2.0`
-LDFLAGS=-L. --export-dynamic
-LDLIBS=-ldl `pkg-config --libs gmodule-2.0` `pkg-config --libs glib-2.0`
+CFLAGS=-Wall -ggdb -Idira -fPIC `pkg-config --cflags glib-2.0` `pkg-config --cflags gmodule-2.0`
+LDFLAGS=-Ldira -L. --export-dynamic
+LDLIBS=-la -ldl `pkg-config --libs gmodule-2.0` `pkg-config --libs glib-2.0`
 
 all: libs main
 
