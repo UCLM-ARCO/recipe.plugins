@@ -2,9 +2,15 @@
 #include <dlfcn.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <gmodule.h>
 #include <glib/ghash.h>
 #include "a.h"
+
+#ifndef PATH_MAX 
+#define PATH_MAX 1024
+#endif
+
 
 static GHashTable* plugin = NULL;
 
@@ -14,7 +20,7 @@ register_plugin (char* key, void (*f)(int))
  if (plugin == NULL)
     plugin = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
  g_hash_table_insert(plugin,key,f);
- printf("** Registrado %s\n", key);
+ printf("** Plugin '%s' registrado con éxito.\n", key);
 }
 
 void
@@ -36,15 +42,21 @@ f (char* key, int i)
 
   p = g_hash_table_lookup(plugin, key);
   if (!p) {
-    char nombre[1024];
-    sprintf(nombre, "./dir%s/lib%s.so", key,key);
-    if((pmodule = g_module_open(nombre,G_MODULE_BIND_LAZY))==NULL){
-      g_warning("No se pudo cargar la librería %s", nombre);
+    char libname[PATH_MAX];
+    char path[PATH_MAX];
+   
+    sprintf(libname, "%s/dir%s/lib%s.so", getcwd(path, PATH_MAX), key, key);
+    printf("Intentando cargar '%s'.\n", libname);
+    if((pmodule = g_module_open(libname,G_MODULE_BIND_LAZY))==NULL){
+      g_warning("No se pudo cargar la librería %s", libname);
       exit(1);
     }
+
     p = g_hash_table_lookup(plugin, key);
   }
   if (p) p(i);
+  else
+     fprintf(stderr, "ERROR: El plugin '%s' no está disponible.\n", key);
 }
 
 int

@@ -33,7 +33,6 @@ libb.a: b.o b2.o
 # compilado se puede eliminar el enlace.
 #
 libb.so: b.o b2.o
-#	$(CC) -Wl,-soname,libb.so $(LDFLAGS) -o $@ $^
 	$(CC) -shared $(LDFLAGS) -o $@ $(filter %.o,$^) $(LDLIBS)
 
 clean:

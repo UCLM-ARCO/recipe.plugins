@@ -5,7 +5,9 @@
 #include <unistd.h>
 #include "a.h"
 
+#ifndef PATH_MAX 
 #define PATH_MAX 1024
+#endif
 
 struct plugin {
   char* key;

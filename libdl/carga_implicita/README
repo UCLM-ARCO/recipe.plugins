@@ -1,4 +1,6 @@
-   Hace falta indicarle al sitema donde tiene que buscar
-las librerías, esto se indica mediante la variable de 
-entorno. 
- 	$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.:./dira
+NOTA
+----
+   El programa deberá ser ejecutado en este mismo directorio, ya
+que sino el programa no podrá encontrar la ruta exacta del plugin,
+y cuando se habla de plugins, estos deben estar localizados en una
+ruta bien conocida.
