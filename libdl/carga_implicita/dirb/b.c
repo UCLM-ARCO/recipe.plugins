@@ -4,7 +4,7 @@
 
 void b(int i)
 {
-  printf("Numerito es: %d\n", b2(i));
+  printf("b(%d) devuelve '%d'\n", i, b2(i));
 }
 
 static void init() __attribute__((constructor));

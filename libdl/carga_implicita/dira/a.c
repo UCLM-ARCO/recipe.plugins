@@ -3,6 +3,6 @@
 
 void a(int i)
 {
-  printf("Numerito es: %d\n", a2(i));
+  printf("a(%d) devuelve '%d'\n", i, a2(i));
 }
 

@@ -6,9 +6,9 @@
 # El flag -ldl se refiere a la libreria libdl.so que permite hacer enlaces dinamicos
 # 
 CC=gcc
-CFLAGS=-Wall -ggdb -Idira -fPIC 
-LDFLAGS=-Ldira -L. --export-dynamic 
-LDLIBS=-la -ldl #./dirb/libb.so 
+CFLAGS=-Wall -ggdb -Idira -fPIC
+LDFLAGS=-Ldira --export-dynamic -rdynamic
+LDLIBS=-la -ldl
 
 all: libs main
 
