@@ -72,7 +72,7 @@ main()
 {
   int i = 3;
   
-  printf("Provemos con %d\n",i);
+  printf("Probemos con %d\n",i);
 
   a(i);      // Llamada estática.
   f("b",i);  // Llamada plugin.
