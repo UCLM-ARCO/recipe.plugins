@@ -1,0 +1,556 @@
+<!DOCTYPE ARTICLE PUBLIC "-//OASIS//DTD DocBook V3.1//EN">
+<ARTICLE ID="default">
+  
+  <ARTHEADER>
+    
+    <TITLE>Creación de Plugins</TITLE> 
+
+    <AUTHOR>
+      <FIRSTNAME>ARCO</FIRSTNAME> 
+    </AUTHOR> 
+    
+    <ABSTRACT>
+      <PARA> 
+	Guia básica para la creación de Plugins en entorno GNU/Linux.
+      </PARA>
+    </ABSTRACT>
+
+    <REVHISTORY>      
+      <REVISION>
+	<REVNUMBER>0.1</REVNUMBER>
+	<DATE>13 / 08 / 2004</DATE> 
+	<AUTHORINITIALS>Víctor Rodríguez López</AUTHORINITIALS>
+	<REVREMARK> Inicial.
+	</REVREMARK>
+      </REVISION>	
+    </REVHISTORY>
+  </ARTHEADER>
+
+
+  <section id="intro">
+    <title>Introducción</title>
+    <para>
+      Los plugins son librerías que pueden ser cargadas bajo demanda en
+      tiempo de ejecución. Es una forma muy elegante para construir
+      programas extensibles y modulares.
+    </para>
+  </section>
+
+  <section>
+    <title>El cargador de enlace dinámico (libdl)</title>
+
+    <para>
+      POR ESCRIBIR
+    </para>
+  </section>
+
+  <section>
+    <title>Plugin usando libdl</title>
+    <para>
+
+    </para>
+    <!-- Con dlsym -->
+    <section>
+      <title>Carga Explicita, usando <function>dlsym()</function></title>
+
+      <para>
+	En este ejemplo se crean dos librerías, una de ellas
+	dinámica libb.so y la otra estática liba.a. El código de este
+	ejemplo se puede encontrar en el <ulink
+	  url="http://arco.inf-cr.uclm.es/svn/public/misc/plugins/">repositorio publico 
+	del grupo ARCO</ulink>.
+      </para>
+      <para>
+	Estas librerías serán llamadas más tarde en el programa
+	principal, libb.so será cargada como un plugin, por otro lado
+	liba.a será tratada como librería estática, y así de esta 
+	manera resaltar las diferencias que existen entre ambas.
+      </para>
+     
+      <!-- MAKEFILE -->
+      <section>
+	<title>Makefile</title>
+	<para>
+	  Vamos a ver en detalle el <filename>Makefile</filename> principal: 
+	</para>
+	<programlistingco>
+	  <areaspec>
+	    <area coords="2" id="make12">
+	    <area coords="3" id="make13">
+	    <area coords="4" id="make14">
+	  </areaspec>
+	  <programlisting>
+CC=gcc
+CFLAGS=-Wall -ggdb -Idira
+LDFLAGS=-Ldira
+LDLIBS=-la -ldl
+
+all: libs main
+
+main: main.o
+
+#
+# Estas reglas ejecutan los makefiles que hay en los subdirectorios
+#
+libs:
+	$(MAKE) -C dira
+	$(MAKE) -C dirb
+
+clean:
+	$(RM) *.o *~ main
+	$(MAKE) -C dira clean
+	$(MAKE) -C dirb clean
+
+	  </programlisting>
+	  <!-- Opción -Idira -->
+	  <calloutlist>
+	    <callout arearefs="make12">
+	      <para>
+		<option>-Idira</option> sirve para indicar donde se
+		encuentra el fichero de interfaz.
+	      </para>
+	    </callout>
+	
+	    <!-- Opción -Ldir -->
+	    <callout arearefs="make13">
+	      <para>
+		<option>-Ldira</option> indica el directorio donde
+		se encuentra a librería.
+	      </para>
+	    </callout>
+	    
+	    <!--  Opción -la -->
+	    <callout arearefs="make14">
+	      <para>
+		<option>-la</option> y <option>-ldl</option> indica
+		el nombre de la librería.
+	      </para>
+	    </callout>
+
+	  </calloutlist>
+	</programlistingco>
+      </section>
+
+      <!-- CODIGO DE LA LIBRERÍA -->
+      <section>
+	<title>Código de la Librería</title>
+	<para>
+	  En <filename>dira</filename> y <filename>dirb</filename>
+	  se encuentra el código de las dos librerías de nuestro ejemplo.
+	</para>
+	<para>
+	  No tiene nada especial, simplemente las funciones
+	  que queremos que implemente la librería.
+	</para>
+      </section>
+
+      <!-- CODIGO DEL PROGRAMA PRINCIPAL -->
+      <section>
+	<title>Código del Programa Principal</title>
+	<para>
+	  Únicamente se resaltan los aspectos importantes del fichero <ulink
+	    url="http://arco.inf-cr.uclm.es/svn/public/misc/plugins/libdl/carga_explicita/main.c">main.c</ulink> 
+	  para la creación de plugins.
+	</para>
+
+	<para>
+	  Indicamos el archivo de cabecera para la librería
+	  libdl.
+	</para>
+	<programlisting>
+	  #include &lt;dlfcn.h&gt;
+	</programlisting>
+
+
+	<para>
+	  <function>dlopen</function> carga en tiempo de ejecución la librería indicada en 
+	  el primer argumento, el segundo argumento es un flag de la librería.
+	</para>
+	<programlisting>
+	  pLibb = dlopen("./dirb/libb.so.1.0.0", RTLD_LAZY);
+	</programlisting>
+	
+
+	<para>
+	  Ahora se obtiene la referencia al símbolo (o función) de la
+	  librería, para ello se usa <function>dlsym</function>.
+	</para>
+	<programlisting>
+	  pFuncion = dlsym(pLibb, "b"));
+	</programlisting>
+	
+
+	<para>
+	  Usar el símbolo:
+	</para>
+	<programlisting>
+	  pFuncion(i);  
+	</programlisting>
+
+	<para>
+	  Liberamos recursos:
+	</para>
+	<programlisting>
+	  dlclose(pLibb);
+	</programlisting>
+
+      </section>
+    </section>
+
+
+
+    <!-- Sin dlsym -->
+    <section>
+
+      <title>Carga Implicita, usando <emphasis>Lista Enlazada</emphasis></title>
+
+      <para>El código de este ejemplo se puede encontrar en <ulink
+	  url="http://arco.inf-cr.uclm.es/svn/public/misc/plugins/libdl/carga_implicita/">carga_implicita</ulink>.
+      </para>
+      <!-- MAKEFILE -->
+      <section>
+	<title>Makefile</title>
+	<para>
+	  En las opciones de complilación, se añaden las 
+	  opciones: <option>-fPIC</option> compilación independiente
+	  de la posición, y <option>-rdynamic</option>
+	  equivale a la opcion <option>-Wl,--export-dynamic</option>
+	  que evita tener que cargar los símbolos de las librerías.
+	</para>
+
+	<programlisting>
+	  CFLAGS=-Wall -ggdb -Idira -fPIC
+	  LDFLAGS=-Ldira  -rdynamic
+	</programlisting>
+	
+
+      </section>
+
+      <!-- CODIGO DE LA LIBRERÍA -->
+      <section id=init>
+	<title>Código de las Librerías</title>
+	<para>
+	  Cuando la librería es llamada por primera vez
+	  deberá ser cargada y registrada en la lísta, por eso se
+	  incluye en las librerías el siguiente código.
+	</para>
+	<programlisting>
+	  static void init() __attribute__((constructor));
+	  
+	  static void init() {
+	  register_plugin("b", &amp;b);
+	  }
+	</programlisting>
+	
+      </section>
+
+      <!-- CODIGO DEL PROGRAMA PRINCIPAL -->
+      <section>
+	<title>Código del Programa Principal</title>
+	<para>
+	  Creamos una <emphasis>lista enlazada</emphasis>
+	  donde se irán almacenando los plugins que vayamos
+	  usando. El código en <ulink
+	    url="http://arco.inf-cr.uclm.es/svn/public/misc/plugins/libdl/carga_implicita/main.c">main.c</ulink>
+	</para>
+	<programlisting>
+struct plugin {
+  char* key;
+  void (*f)(int);
+  struct plugin* next;
+};
+
+static struct plugin* protos;	    
+	</programlisting>
+
+	<para>
+	  Habrá tres funciones para tratar la lísta enlazada:
+	    <function>register_plugin</function>,
+	    <function>unregister_plugin</function> y
+	    <function>busca</function>. Los nombres de las funciones 
+	    son descriptivos de su funcionamiento.
+	</para>
+
+	<programlisting>
+void
+register_plugin (char* key, void (*f)(int))
+{
+  struct plugin* p = (struct plugin*) malloc(sizeof(struct plugin));
+  p->next = protos;
+  p->f = f;
+  p->key = key;
+  protos = p;
+  printf("** Plugin '%s' registrado con éxito.\n", key);
+}
+
+void
+unregister_plugin (char* key)
+{
+  struct plugin *prev = NULL, *p = protos;
+  while (p) {
+    if (0==strcmp(p->key, key)) break;
+    prev = p;
+    p = p->next;
+  }
+  if (p) {
+    if (prev) prev->next = p->next;
+    else protos = p->next;
+    free(p);
+  }
+}
+
+static struct plugin*
+busca(char* key)
+{
+  struct plugin *p = protos;
+  while (p) {
+    if (0==strcmp(p->key, key)) break;
+    p = p->next;
+  }
+  return p;
+}
+</programlisting>
+	 
+
+	<para>
+	  La función <function>f()</function> es la que realmente
+	  hace la llamada al símbolo (o función) del plugin.
+	</para>
+	<programlisting>
+void
+f (char* key, int i)
+{
+  struct plugin* p;
+  p = busca(key);
+  if (!p) {
+    char libname[PATH_MAX];
+    char path[PATH_MAX];
+
+    sprintf(libname, "%s/dir%s/lib%s.so", getcwd(path, PATH_MAX), key, key);
+    printf("Intentando cargar '%s'.\n", libname);
+    dlopen(libname, RTLD_LAZY);
+
+    p = busca(key);
+  }
+  if (p) p->f(i);
+  else 
+    fprintf(stderr, "ERROR: El plugin '%s' no está disponible.\n", key);
+}
+	</programlisting>
+	 
+	<para>
+	  Llamada a la función del plugin:
+	</para>
+	<programlisting>
+ f("b",i);
+	</programlisting>
+      </section>
+    </section>
+
+  </section>
+
+ 
+  <section>
+    <title>Plugin usando GModule</title>
+    <para></para>
+    
+    <!-- Con g_module_symbol -->
+    <section>
+      <title>Carga Explicita, usando <function>g_module_symbol()</function></title>
+      <para>El código de este ejemplo se puede encontrar en <ulink
+	  url="http://arco.inf-cr.uclm.es/svn/public/misc/plugins/gmodule/carga_explicita/">carga_explicita</ulink>.
+      </para>
+      <!-- MAKEFILE -->
+      <section>
+	<title>Makefile</title>
+	<para>
+	  Los únicos cambios en el <filename>Makefile</filename> son
+	  los relacionados con la librería <filename>glib</filename>.
+	  Dentro de <filename>glib</filename> podemos encontrar
+	  <filename>gmodule</filename> que sirve para hacer carga 
+	  dinámica <emphasis>'plug-ins'</emphasis>.
+	</para>
+	<programlisting>
+CFLAGS=-Wall -ggdb -Idira `pkg-config --cflags glib-2.0` `pkg-config
+	    --cflags gmodule-2.0`
+LDLIBS=-la -ldl `pkg-config --libs gmodule-2.0` `pkg-config --libs glib-2.0`	    
+	</programlisting>
+	
+      </section>
+
+      <!-- CODIGO DE LA LIBRERÍA -->
+      <section>
+	<title>Código de la Librería</title>
+	<para>
+	  No tiene ningún cambio significativo.
+	</para>
+      </section>
+
+      <!-- CODIGO DEL PROGRAMA PRINCIPAL -->
+      <section>
+	<title>Código del Programa Principal</title>
+	<para>
+	  A destacar <function>g_module_open</function> para cargar la
+	  librería, y <function>g_module_symbol</function> para
+	  obtener la referencia al simbolo del plugin. El código del
+	  programa principal en <ulink
+	    url="http://arco.inf-cr.uclm.es/svn/public/misc/plugins/gmodule/carga_explicita/main.c">main.c</ulink>
+	</para>
+
+	<programlisting>
+pmodule = g_module_open("./dirb/libb.so.1.0.0",G_MODULE_BIND_LAZY);       
+...
+...
+...
+g_module_symbol(pmodule,"b", (gpointer*)&amp;pFuncion);
+	</programlisting>
+	 
+	<para>
+	  Liberar recursos:
+	</para>
+	<programlisting>
+	    g_module_close(pmodule);
+	  </programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Carga Implicita, usando <emphasis>Tabla Hash</emphasis> </title>
+      <para>El código de este ejemplo se puede encontrar en <ulink
+	  url="http://arco.inf-cr.uclm.es/svn/public/misc/plugins/gmodule/carga_implicita/">carga_implicita</ulink>.</para>
+      <!-- MAKEFILE -->
+      <section>
+	<title>Makefile</title>
+	<para> 
+	  La diferencia en el <filename>Makefile</filename>
+	  sólo tiene que ver con <filename>glib</filename>, por tanto 
+	  los cambios son los mismos del ejemplo anterior.
+	</para>
+      </section>
+
+      <!-- CODIGO DE LA LIBRERÍA -->
+      <section>
+	<title>Código de la Librería</title>
+	<para>
+	  El mismo del ejemplo de <firstterm linkend="init">Lista Enlazada</firstterm>. 
+	</para>
+      </section>
+
+      <!-- CODIGO DEL PROGRAMA PRINCIPAL -->
+      <section>
+	<title>Código del Programa Principal</title>
+	<para>
+	  El código en <ulink
+	    url="http://arco/svn/public/misc/plugins/gmodule/carga_implicita/main.c">main.c</ulink>
+	</para>
+	<para>
+	  Cabecera para el manejo de tablas <emphasis>Hash</emphasis>
+	</para>
+
+	<programlisting>
+#include &lt;glib/ghash.h&gt;	 
+	</programlisting>
+
+	<para>
+	  Creación de una tabla para almacenar los plugins,
+	  y funciones para registra o des-registrar plugins usando la 
+	  tabla Hash.
+	</para>
+	<programlisting>
+static GHashTable* plugin = NULL;
+
+void
+register_plugin (char* key, void (*f)(int))
+{
+ if (plugin == NULL)
+    plugin = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+ g_hash_table_insert(plugin,key,f);
+ printf("** Plugin '%s' registrado con éxito.\n", key);
+}
+
+void
+unregister_plugin (char* key)
+{
+  if (plugin != NULL)
+    g_hash_table_remove(plugin,key);
+  
+}	    
+	</programlisting>
+	
+	<para>
+	  Esta función es la que llama al símbolo del plugin.
+	</para>
+	<programlisting>
+void
+f (char* key, int i)
+{
+  GModule* pmodule;
+  void (*p)(int);
+
+  if (plugin == NULL)
+    plugin = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+
+  p = g_hash_table_lookup(plugin, key);
+  if (!p) {
+    char libname[PATH_MAX];
+    char path[PATH_MAX];
+   
+    sprintf(libname, "%s/dir%s/lib%s.so", getcwd(path, PATH_MAX), key, key);
+    printf("Intentando cargar '%s'.\n", libname);
+    if((pmodule = g_module_open(libname,G_MODULE_BIND_LAZY))==NULL){
+      g_warning("No se pudo cargar la librería %s", libname);
+      exit(1);
+    }
+
+    p = g_hash_table_lookup(plugin, key);
+  }
+  if (p) p(i);
+  else
+     fprintf(stderr, "ERROR: El plugin '%s' no está disponible.\n", key);
+}
+	</programlisting>
+	
+      </section>
+    </section>
+  </section>
+  
+
+<!-- BIBLIOGRAFÍA -->
+  <bibliography id=refs>
+    <title>Referencias</title>
+ 
+    <biblioentry>
+      <abbrev>1</abbrev>
+      <publisher>
+	<publishername>Escuela Superior de Informática</publishername>
+      </publisher>
+      <title>Aplicaciones de desarrollo en GNU/Linux</title>
+      <date>2004</date>
+    </biblioentry>
+
+    <biblioentry>
+      <abbrev>2</abbrev>
+      <publisher>
+	<publishername>Plugins</publishername>
+      </publisher>
+      <title><ulink
+	  url="http://arco.inf-cr.uclm.es/svn/public/misc/plugins/">Repositorio
+	  publico del grupo ARCO</ulink></title>
+      <date>2004</date>
+    </biblioentry>
+    
+    <biblioentry>
+      <abbrev>3</abbrev>
+      <publisher>
+	<publishername>Librerías</publishername>
+      </publisher>
+      <title><ulink
+	  url="http://arco.inf-cr.uclm.es/mdoc-librerias.html">mini-doc
+	  del grupo ARCO</ulink></title>
+      <date>2003</date>
+    </biblioentry>
+
+  </bibliography>
+ 
+</article>
+
